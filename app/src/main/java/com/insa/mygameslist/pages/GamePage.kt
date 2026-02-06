@@ -5,13 +5,16 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -19,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.insa.mygameslist.R
 import com.insa.mygameslist.data.IGDB
@@ -39,7 +44,7 @@ fun GamePage(gameId: Long) {
             TopAppBar(
                 colors = topAppBarColors(
                     containerColor = Color.hsv(100f, 0.47f, 1f),
-                    titleContentColor = Color.Black,
+                    titleContentColor = Color.Black
                 ),
                 title = { Text(game?.name ?: "Game not found") })
         },
@@ -48,28 +53,41 @@ fun GamePage(gameId: Long) {
     ) { innerPadding ->
         if (game != null) {
             Column(
-                modifier = Modifier.padding(innerPadding).fillMaxWidth()
+                modifier = Modifier.padding(innerPadding).fillMaxWidth().verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Spacer(modifier = Modifier.height(16.dp))
+
                 Text(
                     text = game.name,
+                    fontSize = 30.sp,
+                    style = MaterialTheme.typography.headlineMedium,
                     textDecoration = TextDecoration.Underline,
                     textAlign = TextAlign.Center
                 )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
                 AsyncImage(
                     model = "https:${game.cover.url}",
                     contentDescription = "Game image",
                     modifier = Modifier
-                        .size(80.dp)
+                        .size(250.dp)
                         .padding(end = 12.dp),
-                    contentScale = ContentScale.Crop,
+                    contentScale = ContentScale.Fit,
                     error = painterResource(R.drawable.broken_image)
                 )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Text(
                     game.genres.joinToString(", ") { it.name },
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center
                 )
+
+                Spacer(modifier = Modifier.height(13.dp))
 
                 Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
                     horizontalArrangement = Arrangement.Center){
@@ -86,15 +104,16 @@ fun GamePage(gameId: Long) {
                             model = imageUrl,
                             contentDescription = "Platform image",
                             modifier = Modifier
-                                .size(40.dp)
+                                .size(70.dp)
                                 .padding(end = 8.dp),
                             contentScale = ContentScale.Fit,
                             error = painterResource(R.drawable.broken_image)
                         )
                     }
                 }
+
                 Text(
-                    modifier = Modifier.padding(16.dp),
+                    modifier = Modifier.padding(13.dp),
                     text = game.summary,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface,
