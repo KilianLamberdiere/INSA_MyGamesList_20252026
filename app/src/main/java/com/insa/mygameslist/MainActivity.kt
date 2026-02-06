@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -45,7 +46,17 @@ class MainActivity : ComponentActivity() {
                 ) { innerPadding ->
 
                     Text("À remplir", modifier = Modifier.padding(innerPadding))
-
+                    LazyColumn (modifier =  Modifier.padding(innerPadding)){
+                        items(IGDB.games.size)
+                        { index ->
+                            val game = IGDB.games[index]
+                            GameCard(
+                                title = game.name,
+                                genres = game.genres,
+                                imageUrl = game.cover.url
+                            )
+                        }
+                    }
                 }
             }
         }

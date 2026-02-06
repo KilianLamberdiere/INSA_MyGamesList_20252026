@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -45,7 +46,16 @@ fun GameCard(title: String, genres: Set<Genre>, imageUrl: String) {
 @Preview(showBackground = true)
 @Composable
 fun GameCardsPreview() {
-    for (g in IGDB.games) {
-        GameCard(title = g.name, genres = g.genres, imageUrl = g.cover.url)
+    LazyColumn {
+        items(IGDB.games.size)
+        {
+            for(game in IGDB.games) {
+                GameCard(
+                    title = game.name,
+                    genres = game.genres,
+                    imageUrl = game.cover.url
+                )
+            }
+        }
     }
 }
