@@ -1,14 +1,11 @@
-package com.insa.mygameslist
+package com.insa.mygameslist.components
 
-import android.text.Layout.Alignment.*
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -20,21 +17,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.insa.mygameslist.R
 import com.insa.mygameslist.data.Genre
-import com.insa.mygameslist.data.IGDB
 
 @Composable
-fun GameCard(title: String, genres: Set<Genre>, imageUrl: String) {
+fun GameCard(title: String, genres: Set<Genre>, imageUrl: String, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(120.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp),
-        elevation = CardDefaults.cardElevation(4.dp)
-    ){Row( modifier = Modifier.padding(16.dp),
+        elevation = CardDefaults.cardElevation(4.dp),
+        onClick = onClick
+    ){
+        Row( modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically) {
             AsyncImage(
                 model = "https:$imageUrl",
