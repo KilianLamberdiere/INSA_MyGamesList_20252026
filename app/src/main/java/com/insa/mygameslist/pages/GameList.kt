@@ -31,14 +31,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.insa.mygameslist.components.GameCard
 import com.insa.mygameslist.view.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameList(viewModel: GameViewModel, onGameClicked: (Long) -> Unit) {
-    var searchOpen by remember { mutableStateOf(false) }
-    var query by remember { mutableStateOf("") }
+fun GameList(
+    viewModel: GameViewModel,
+    onGameClicked: (Long) -> Unit,
+    query: String,
+    onQueryChange: (String) -> Unit
+) {
+    var searchOpen by remember { mutableStateOf(query != "") }
     val focusRequester = remember { FocusRequester() }
     val gamesState = viewModel.games.collectAsState()
     val games = gamesState.value
@@ -49,16 +56,16 @@ fun GameList(viewModel: GameViewModel, onGameClicked: (Long) -> Unit) {
         }
     }
     var previousFocusState by remember { mutableStateOf(false) }
-    val filteredGames = if (query.isNotEmpty()) {
+    val filteredGames = (if (query.isNotEmpty()) {
         games.filter { game ->
-            game.name.contains(query, ignoreCase = true)
+            game.name.contains(query, ignoreCase = true) || game.genres.any { it.name.contains(query, ignoreCase = true) } || game.platforms.any { it.name.contains(query, ignoreCase = true) }
         }
     } else {
         games
-    }
+    }).sortedBy { it.name }.sortedBy { !it.isFavorite }
     BackHandler(enabled = searchOpen) {
         searchOpen = false
-        query = ""
+        onQueryChange("")
     }
 
     return Scaffold(
@@ -72,7 +79,7 @@ fun GameList(viewModel: GameViewModel, onGameClicked: (Long) -> Unit) {
                     AnimatedVisibility(searchOpen) {
                         TextField(
                             value = query,
-                            onValueChange = { query = it },
+                            onValueChange = { onQueryChange(it) },
                             placeholder = { Text("Search games...") },
                             modifier = Modifier
                                 .focusRequester(focusRequester)
@@ -122,6 +129,19 @@ fun GameList(viewModel: GameViewModel, onGameClicked: (Long) -> Unit) {
                     onFavoriteClick = {viewModel.toggleFavorite(game.id)} ,
                     modifier = Modifier.animateItem()
                 )
+            }
+            if (filteredGames.isEmpty()) {
+                item {
+                    Text(
+                        text = "No games found",
+                        fontSize = 18.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        color = Color.Gray
+                    )
+                }
             }
         }
     }
