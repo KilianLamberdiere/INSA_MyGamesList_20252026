@@ -85,4 +85,4 @@ data class Platform(val id: Long, val name: String, val logo: Logo?)
 
 data class JsonGame(val id: Long, val cover: Long, val first_release_date: Long, val genres: List<Long>, val name: String, val platforms: List<Long>, val summary: String, val total_rating: Double)
 
-data class Game(val id: Long, val cover: Cover, val release: LocalDate, val genres: Set<Genre>, val name: String, val platforms: Set<Platform>, val summary: String, val rating: Double)
+data class Game(val id: Long, val cover: Cover, val release: LocalDate, val genres: Set<Genre>, val name: String, val platforms: Set<Platform>, val summary: String, val rating: Double, val isFavorite : Boolean = false)

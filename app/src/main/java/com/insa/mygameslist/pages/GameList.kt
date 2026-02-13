@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,14 +32,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import com.insa.mygameslist.components.GameCard
-import com.insa.mygameslist.data.IGDB
+import com.insa.mygameslist.view.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GameList(onGameClicked: (Long) -> Unit) {
+fun GameList(viewModel: GameViewModel, onGameClicked: (Long) -> Unit) {
     var searchOpen by remember { mutableStateOf(false) }
     var query by remember { mutableStateOf("") }
     val focusRequester = remember { FocusRequester() }
+    val gamesState = viewModel.games.collectAsState()
+    val games = gamesState.value
+
     LaunchedEffect(searchOpen) {
         if (searchOpen) {
             focusRequester.requestFocus()
@@ -46,11 +50,11 @@ fun GameList(onGameClicked: (Long) -> Unit) {
     }
     var previousFocusState by remember { mutableStateOf(false) }
     val filteredGames = if (query.isNotEmpty()) {
-        IGDB.games.filter { game ->
+        games.filter { game ->
             game.name.contains(query, ignoreCase = true)
         }
     } else {
-        IGDB.games
+        games
     }
     BackHandler(enabled = searchOpen) {
         searchOpen = false
@@ -113,10 +117,9 @@ fun GameList(onGameClicked: (Long) -> Unit) {
                 key = { it.id }
             ) { game ->
                 GameCard(
-                    title = game.name,
-                    genres = game.genres,
-                    imageUrl = game.cover.url,
+                    game = game,
                     onClick = { onGameClicked(game.id) },
+                    onFavoriteClick = {viewModel.toggleFavorite(game.id)} ,
                     modifier = Modifier.animateItem()
                 )
             }
