@@ -19,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
@@ -67,25 +69,30 @@ fun GamePage(gameId: Long, viewModel: GameViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = game.name,
-                    fontSize = 30.sp,
-                    style = MaterialTheme.typography.headlineMedium,
-                    textDecoration = TextDecoration.Underline,
-                    textAlign = TextAlign.Center
-                )
-
-                IconButton(
-                    onClick = { viewModel.toggleFavorite(game.id) }
-                ) {
-                    Icon(
-                        imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                        contentDescription = if (game.isFavorite) "Retirer des favoris" else "Ajouter aux favoris",
-                        tint = if (game.isFavorite) Color.hsv(40f, 0.958f, 1f) else Color.Gray
+                Row (
+                    modifier = Modifier.padding(horizontal = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ){
+                    Text(
+                        text = game.name,
+                        fontSize = 30.sp,
+                        style = MaterialTheme.typography.headlineMedium,
+                        textDecoration = TextDecoration.Underline,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.weight(1f).alignByBaseline()
                     )
-                }
 
+                    IconButton(
+                        onClick = { viewModel.toggleFavorite(game.id) }
+                    ) {
+                        Icon(
+                            imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            contentDescription = if (game.isFavorite) "Retirer des favoris" else "Ajouter aux favoris",
+                            tint = if (game.isFavorite) Color.hsv(40f, 0.958f, 1f) else Color.Gray
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
