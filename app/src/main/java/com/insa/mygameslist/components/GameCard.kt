@@ -28,8 +28,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.insa.mygameslist.R
 import com.insa.mygameslist.data.Game
-import com.insa.mygameslist.data.Genre
-
+import androidx.compose.ui.graphics.Color
 @Composable
 fun GameCard(game: Game, onClick: () -> Unit, onFavoriteClick : () -> Unit, modifier: Modifier = Modifier) {
     Card(
@@ -51,7 +50,7 @@ fun GameCard(game: Game, onClick: () -> Unit, onFavoriteClick : () -> Unit, modi
                 contentScale = ContentScale.Fit,
                 error = painterResource(R.drawable.cover_placeholder)
             )
-            Column(modifier = Modifier.size(230.dp)) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = game.name,
                     textDecoration = TextDecoration.Underline,
@@ -71,7 +70,8 @@ fun GameCard(game: Game, onClick: () -> Unit, onFavoriteClick : () -> Unit, modi
             ) {
                 Icon(
                     imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                    contentDescription = if (game.isFavorite) "Retirer des favoris" else "Ajouter aux favoris"
+                    contentDescription = if (game.isFavorite) "Retirer des favoris" else "Ajouter aux favoris",
+                    tint = if (game.isFavorite) Color.hsv(40f, 0.958f, 1f) else Color.Gray
                 )
             }
         }

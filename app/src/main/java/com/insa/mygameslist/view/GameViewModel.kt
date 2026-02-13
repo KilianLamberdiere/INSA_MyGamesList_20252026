@@ -25,8 +25,4 @@ class GameViewModel : ViewModel() {
             }
         }
     }
-
-    fun getGame(gameId: Long): Game? {
-        return _games.value.find { it.id == gameId }
-    }
 }

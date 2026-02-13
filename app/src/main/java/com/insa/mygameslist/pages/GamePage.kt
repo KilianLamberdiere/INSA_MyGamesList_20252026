@@ -81,7 +81,8 @@ fun GamePage(gameId: Long, viewModel: GameViewModel) {
                 ) {
                     Icon(
                         imageVector = if (game.isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
-                        contentDescription = if (game.isFavorite) "Retirer des favoris" else "Ajouter aux favoris"
+                        contentDescription = if (game.isFavorite) "Retirer des favoris" else "Ajouter aux favoris",
+                        tint = if (game.isFavorite) Color.hsv(40f, 0.958f, 1f) else Color.Gray
                     )
                 }
 
