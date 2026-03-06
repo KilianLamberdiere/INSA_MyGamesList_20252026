@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.insa.mygameslist.R
-import com.insa.mygameslist.data.IGDB
+//import com.insa.mygameslist.data.IGDB
 import com.insa.mygameslist.view.GameViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -122,6 +122,7 @@ fun GamePage(gameId: Long, viewModel: GameViewModel) {
                     for(p in game.platforms){
 
                         var imageUrl = "https:${p.logo?.url}"
+                        Log.d("LOGOS", imageUrl)
                         if(imageUrl.endsWith("jpg")){
                             imageUrl = imageUrl.replace("jpg","png")
                         }

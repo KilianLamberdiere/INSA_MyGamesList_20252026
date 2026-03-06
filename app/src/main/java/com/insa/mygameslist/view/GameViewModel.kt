@@ -1,19 +1,32 @@
 package com.insa.mygameslist.view
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.insa.mygameslist.data.Game
-import com.insa.mygameslist.data.IGDB
+import com.insa.mygameslist.data.GameRepository
+//import com.insa.mygameslist.data.IGDB
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class GameViewModel : ViewModel() {
+    private val repository = GameRepository()
     private val _games = MutableStateFlow<List<Game>>(emptyList())
     val games: StateFlow<List<Game>> = _games
 
+    init {
+        loadGames()
+    }
     fun loadGames() {
-        _games.value = IGDB.games
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _games.value = repository.getGames()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     fun toggleFavorite(gameId: Long) {
